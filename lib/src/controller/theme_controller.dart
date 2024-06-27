@@ -6,8 +6,7 @@ import 'save_adapter.dart';
 import 'shared_preferences_adapter.dart';
 
 /// Handler which provides the activated controller.
-typedef void ThemeControllerHandler(
-    ThemeController controller, Future<String?> previouslySavedThemeFuture);
+typedef void ThemeControllerHandler(ThemeController controller, Future<String?> previouslySavedThemeFuture);
 
 /// Object which controls the behavior of the theme.
 /// This is the object provided through the widget tree.
@@ -89,12 +88,10 @@ class ThemeController extends ChangeNotifier {
 
     if (defaultThemeId != null) {
       _currentThemeIndex = _appThemeIds.indexOf(defaultThemeId);
-      assert(_currentThemeIndex != -1,
-          "No app theme with the default theme id: $defaultThemeId");
+      assert(_currentThemeIndex != -1, "No app theme with the default theme id: $defaultThemeId");
     }
 
-    assert(!(onInitCallback != null && _loadThemeOnInit),
-        "Cannot set both onInitCallback and loadThemeOnInit");
+    assert(!(onInitCallback != null && _loadThemeOnInit), "Cannot set both onInitCallback and loadThemeOnInit");
 
     if (_loadThemeOnInit) {
       _getPreviousSavedTheme().then((savedTheme) {
@@ -128,8 +125,7 @@ class ThemeController extends ChangeNotifier {
 
     AppTheme? oldTheme = _appThemes[_appThemeIds[_oldThemeIndex]];
     AppTheme? currentTheme = _appThemes[_appThemeIds[_currentThemeIndex]];
-    assert(oldTheme != null && currentTheme != null,
-        "Old theme/Current theme referenced to null values.");
+    assert(oldTheme != null && currentTheme != null, "Old theme/Current theme referenced to null values.");
     if (oldTheme != null && currentTheme != null) {
       _onThemeChanged(oldTheme, currentTheme);
     }
@@ -173,14 +169,18 @@ class ThemeController extends ChangeNotifier {
     }
   }
 
+  Future<bool> hasSavedTheme() async {
+    String? savedTheme = await _getPreviousSavedTheme();
+    return savedTheme != null;
+  }
+
   /// Saves current theme to disk.
   Future<void> saveThemeToDisk() async {
     _saveAdapter.saveTheme(_providerId, currentThemeId);
   }
 
   /// Returns the list of all themes.
-  List<AppTheme> get allThemes =>
-      _appThemeIds.map<AppTheme>((id) => _appThemes[id]!).toList();
+  List<AppTheme> get allThemes => _appThemeIds.map<AppTheme>((id) => _appThemes[id]!).toList();
 
   /// Returns whether there is a theme with the given id.
   bool hasTheme(String themeId) {
